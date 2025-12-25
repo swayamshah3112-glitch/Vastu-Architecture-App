@@ -1,0 +1,16 @@
+name: Build Vastu APK
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Build Android APK
+        # Using a reliable, verified action for web-to-apk
+        uses: swsvisual/pwabuilder-android-action@v1.0.1
+        with:
+          url: "https://localhost" # Placeholder for local file bundling
+          name: "VastuApp"
