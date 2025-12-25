@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vastu Analysis Tool for Architects</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #e67e22;
+            --success: #27ae60;
+            --warning: #f1c40f;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: var(--primary);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 2px solid var(--light);
+            margin-bottom: 20px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+            aspect-ratio: 1 / 1;
+        }
+
+        .zone {
+            border: 2px dashed #bdc3c7;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            text-align: center;
+            transition: all 0.3s;
+            background: #fafafa;
+        }
+
+        .zone:hover { border-color: var(--accent); }
+        
+        .zone-title { font-weight: bold; font-size: 0.9em; margin-bottom: 5px; color: #7f8c8d; }
+
+        select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-size: 0.8em;
+        }
+
+        .results {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            background: var(--light);
+        }
+
+        .status-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.8em;
+            margin-bottom: 10px;
+        }
+
+        .ideal { background: var(--success); color: white; }
+        .neutral { background: var(--warning); color: black; }
+        .avoid { background: var(--danger); color: white; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #ddd; }
+        
+        .compass-label { font-weight: bold; color: var(--accent); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Vastu Purusha Mandala</h1>
+        <p>Architectural Spatial Analysis Tool</p>
+    </header>
+
+    <div class="grid-container" id="mandala">
+        <div class="zone" data-direction="NW">
+            <span class="zone-title">North-West (Vayu)</span>
+            <select onchange="analyze()">
+                <option value="empty">Select Use...</option>
+                <option value="bedroom">Guest Bedroom</option>
+                <option value="kitchen">Kitchen</option>
+                <option value="toilet">Toilet</option>
+                <option value="storage">Grain Storage</option>
+            </select>
+        </div>
+        <div class="zone" data-direction="N">
+            <span class="zone-title">North (Kubera)</span>
+            <select onchange="analyze()">
+                <option value="empty">Select Use...</option>
+                <option value="living">Living Room</option>
+                <option value="entrance">Main Entrance</option>
+                <option value="bedroom">Bedroom</option>
+                <option value="toilet">Toilet</option>
+            </select>
+        </div>
+        <div class="zone" data-direction="NE">
+            <span class="zone-title">North-East (Ishanya)</span>
+            <select onchange="analyze()">
+                <option value="empty">Select Use...</option>
+                <option value="pooja">Pooja Room</option>
+                <option value="living">Living Room</option>
+                <option value="toilet">Toilet/Septic</option>
+                <option value="kitchen">Kitchen</option>
+            </select>
+        </div>
+        <div class="zone" data-direction="W">
+            <span class="zone-title">West (Varuna)</span>
+            <select onchange="analyze()">
+                <option value="empty">Select Use...</option>
+                <option value="dining">Dining Hall</option>
+                <option value="study">Study Room</option>
+                <option value="toilet">Toilet</option>
+            </select>
+        </div>
+        <div class="zone" data-direction="C" style="background: #fff8e1; border: 2px solid #f1c40f;">
+            <span class="zone-title">Center (Brahmasthan)</span>
+            <select onchange="analyze()">
+                <option value="empty">Open Courtyard</option>
+                <option value="heavy">Heavy Walls/Pillars</option>
+                <option value="toilet">Toilet</option>
+            </select>
+        </div>
+        <div class="zone" data-direction="E">
+            <span class="zone-title">East (Aditya)</span>
+            <select onchange="analyze()">
+                <option value="empty">Select Use...</option>
+                <option value="living">Living Room</option>
+                <option value="entrance">Main Entrance</option>
+                <option value="study">Study</option>
+            </select>
+        </div>
+        <div class="zone" data-direction="SW">
+            <span class="zone-title">South-West (Nairutya)</span>
+            <select onchange="analyze()">
+                <option value="empty">Select Use...</option>
+                <option value="master">Master Bedroom</option>
+                <option value="heavy">Heavy Storage</option>
+                <option value="entrance">Main Entrance</option>
+                <option value="kitchen">Kitchen</option>
+            </select>
+        </div>
+        <div class="zone" data-direction="S">
+            <span class="zone-title">South (Yama)</span>
+            <select onchange="analyze()">
+                <option value="empty">Select Use...</option>
+                <option value="bedroom">Bedroom</option>
+                <option value="stairs">Staircase</option>
+                <option value="toilet">Toilet</option>
+            </select>
+        </div>
+        <div class="zone" data-direction="SE">
+            <span class="zone-title">South-East (Agni)</span>
+            <select onchange="analyze()">
+                <option value="empty">Select Use...</option>
+                <option value="kitchen">Kitchen</option>
+                <option value="electrical">Electrical/Gen-Set</option>
+                <option value="bedroom">Bedroom</option>
+                <option value="toilet">Toilet</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="results" id="analysis-output">
+        <h3>Analysis Report</h3>
+        <p>Change the room types in the grid above to see the Vastu compliance score.</p>
+        <table id="report-table">
+            <thead>
+                <tr>
+                    <th>Zone</th>
+                    <th>Status</th>
+                    <th>Scientific/Traditional Reasoning</th>
+                </tr>
+            </thead>
+            <tbody id="report-body">
+                </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    const vastuLogic = {
+        "NE": { "pooja": ["ideal", "Highest positive energy zone; keeps the mind calm for prayer."], "toilet": ["avoid", "Water contamination risk and blocks spiritual energy flow."], "kitchen": ["avoid", "Conflict between Fire (Agni) and Water (Eshwar)."] },
+        "SE": { "kitchen": ["ideal", "The zone of Agni (Fire). Ideal for metabolic activities and cooking."], "bedroom": ["neutral", "May cause irritability due to excessive heat energy."], "toilet": ["avoid", "Fire and water conflict; affects health of occupants."] },
+        "SW": { "master": ["ideal", "The zone of Earth (Prithvi). Provides stability and leadership."], "entrance": ["avoid", "Vulnerable to negative energy; traditionally the 'demon' corner."], "kitchen": ["avoid", "Leads to family friction."] },
+        "NW": { "toilet": ["ideal", "The zone of Air (Vayu). Helps in eliminating waste/toxins efficiently."], "bedroom": ["neutral", "Good for guests or daughters; symbolizes movement."], "kitchen": ["neutral", "Secondary option for kitchen."] },
+        "C": { "empty": ["ideal", "Brahmasthan should be open to sky for ventilation and light."], "heavy": ["avoid", "Oppresses the 'heart' of the home; restricts energy flow."], "toilet": ["avoid", "Major Vastu defect; spreads negative energy to all rooms."] },
+        "N": { "entrance": ["ideal", "Direction of wealth (Kubera). Encourages prosperity."], "living": ["ideal", "Good for social interaction and light."] },
+        "E": { "entrance": ["ideal", "Receives the first rays of the Sun (UV sterilization)."], "study": ["ideal", "Promotes focus and enlightenment."] },
+        "S": { "stairs": ["ideal", "Heavy structures are best suited for South and West."] },
+        "W": { "dining": ["ideal", "West is governed by Varuna; good for consumption and stability."] }
+    };
+
+    function analyze() {
+        const zones = document.querySelectorAll('.zone');
+        const reportBody = document.getElementById('report-body');
+        reportBody.innerHTML = '';
+
+        zones.forEach(zone => {
+            const dir = zone.getAttribute('data-direction');
+            const use = zone.querySelector('select').value;
+            
+            if (use !== 'empty') {
+                const logic = vastuLogic[dir] && vastuLogic[dir][use];
+                const status = logic ? logic[0] : "neutral";
+                const reason = logic ? logic[1] : "Standard placement; ensure proper ventilation.";
+                
+                const row = `<tr>
+                    <td class="compass-label">${dir}</td>
+                    <td><span class="status-tag ${status}">${status.toUpperCase()}</span></td>
+                    <td>${reason}</td>
+                </tr>`;
+                reportBody.innerHTML += row;
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
